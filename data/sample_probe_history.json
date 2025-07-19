@@ -1,0 +1,76 @@
+{
+    "id": 1000295,
+    "address_v4": "145.224.83.59",
+    "address_v6": null,
+    "asn_v4": 14593,
+    "asn_v6": null,
+    "prefix_v4": "145.224.82.0/23",
+    "prefix_v6": null,
+    "is_anchor": false,
+    "is_public": true,
+    "status": {
+        "name": "Disconnected",
+        "since": 1751097647,
+        "id": 2
+    },
+    "status_since": 1751097647,
+    "first_connected": 1583773957,
+    "total_uptime": 164802112,
+    "tags": [
+        {
+            "name": "system: IPv4 RFC1918",
+            "slug": "system-ipv4-rfc1918"
+        },
+        {
+            "name": "system: IPv4 Capable",
+            "slug": "system-ipv4-capable"
+        },
+        {
+            "name": "system: Software",
+            "slug": "system-software"
+        },
+        {
+            "name": "system: IPv4 Stable 90d",
+            "slug": "system-ipv4-stable-90d"
+        },
+        {
+            "name": "Home",
+            "slug": "home"
+        },
+        {
+            "name": "IPv4",
+            "slug": "ipv4"
+        },
+        {
+            "name": "Native IPv4",
+            "slug": "native-ipv4"
+        },
+        {
+            "name": "VDSL2",
+            "slug": "vdsl2"
+        },
+        {
+            "name": "DSL",
+            "slug": "dsl"
+        },
+        {
+            "name": "pi-hole",
+            "slug": "pi-hole"
+        },
+        {
+            "name": "Docker",
+            "slug": "docker"
+        }
+    ],
+    "country_code": "DE",
+    "date": "20250630",
+    "snapshot_datetime": 1751336100,
+    "probe": "https://atlas.ripe.net/api/v2/probes/1000295/?format=txt",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            9.3715,
+            48.5795
+        ]
+    }
+}
