@@ -1,7 +1,7 @@
 #!/bin/python3
 import requests
 from datetime import datetime
-from config import MEASUREMENT_FILE, PROBES_HISTORY_FILE
+from config import *
 
 def unix_time_to_iso8601(unix_time: int) -> str:
     """
@@ -43,6 +43,24 @@ def get_measurement_info(measurement_id: int) -> dict:
         raise Exception(f"Failed to fetch measurement info. Status code: {response.status_code}")
 
 
+def get_time_range(measurement_id: int) -> tuple[int, int]:
+    """
+    Get the start and end time of a measurement.
+    
+    Parameters
+    ----------
+    measurement_id : int
+        The ID of the measurement.
+    
+    Returns
+    -------
+    tuple[int, int]
+        A tuple containing the start and end time in Unix timestamp format.
+    """
+    measurement_info = get_measurement_info(measurement_id)
+    return measurement_info['start_time'], measurement_info['stop_time']
+
+
 def download_measurement(measurement_id: int) -> None:
     """
     Use Ripe Atlas API to download all measurement results by its ID.
@@ -76,14 +94,14 @@ def download_measurement(measurement_id: int) -> None:
         print(f"Failed to download measurement {measurement_id}. Status code: {response.status_code}")
 
 
-def download_probes_history(probes: list[int], start_time: int, end_time: int) -> None:
+def download_probes_history(probes: Probes, start_time: int, end_time: int) -> None:
     """
     Use Ripe Atlas API to download probes history by their IDs.
     
     Parameters
     ----------
-    probes : list[int]
-        A list of probe IDs to download history for.
+    probes : Probes
+        A dictionary of probe IDs and their corresponding country and continent.
     
     Returns
     -------
@@ -92,7 +110,7 @@ def download_probes_history(probes: list[int], start_time: int, end_time: int) -
     """
     url = "https://atlas.ripe.net/api/v2/probes/archive/"
     params = {
-        "probe": ",".join(map(str, probes)),
+        "probe": ",".join(map(str, probes.keys())),
         "date__gte": unix_time_to_iso8601(start_time).split('T')[0],
         "date__lte": unix_time_to_iso8601(end_time).split('T')[0],
         "format": "txt"
