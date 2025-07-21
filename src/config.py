@@ -51,7 +51,7 @@ MEASUREMENT_ID = 113897643
 STARLINK_ASN = 14593
 STARLINK_GATEWAY = "100.64.0.1"
 
-# File paths
+# --- File paths ---
 DATA_DIR = "data/"
 PLOT_DIR = "plots/"
 def MEASUREMENT_FILE(measurement_id: int, ext: str="json") -> str:
@@ -59,4 +59,6 @@ def MEASUREMENT_FILE(measurement_id: int, ext: str="json") -> str:
     return f"{DATA_DIR}measurement_{measurement_id}.{ext}"
 def PROBES_HISTORY_FILE(probes: Probes, ext: str="json") -> str:
     """Return the file path for the probes history."""
+    if len(probes) == 1:
+        return f"{DATA_DIR}probes_history_{list(probes.keys())[0]}.{ext}"
     return f"{DATA_DIR}probes_history_{min(probes.keys())}_to_{max(probes.keys())}.{ext}"
