@@ -1,5 +1,11 @@
 """Global configuration settings."""
 
+# --- Output settings ---
+FIG_SIZE = (6, 4)
+SHOW_PLOTS = False  # Show plots in the output
+SAVE_PLOTS = True  # Save plots to files
+PLOT_INDIVIDUAL_PROBES = True  # Plot data for individual probes
+
 # --- Constants for Continents ---
 AFRICA = "Africa"
 OCEANIA = "Oceania"
@@ -62,3 +68,22 @@ def PROBES_HISTORY_FILE(probes: Probes, ext: str="json") -> str:
     if len(probes) == 1:
         return f"{DATA_DIR}probes_history_{list(probes.keys())[0]}.{ext}"
     return f"{DATA_DIR}probes_history_{min(probes.keys())}_to_{max(probes.keys())}.{ext}"
+def PROBE_CONNECTION_FILE(probes: Probes, ext: str="csv") -> str:
+    """Return the file path for the probe connection analysis."""
+    DIR = DATA_DIR if ext=="cvs" else PLOT_DIR
+    if len(probes) == 1:
+        return f"{DIR}probe_connection_{list(probes.keys())[0]}.{ext}"
+    return f"{DATA_DIR}probe_connection_{min(probes.keys())}_to_{max(probes.keys())}.{ext}"
+def PROBE_POP_IPS_FILE(probes: Probes, ext: str="csv") -> str:
+    """Return the file path for the probe PoP IPs analysis."""
+    if len(probes) == 1:
+        return f"{PLOT_DIR}probe_pop_ips_{list(probes.keys())[0]}.{ext}"
+    return f"{PLOT_DIR}probe_pop_ips_{min(probes.keys())}_to_{max(probes.keys())}.{ext}"
+def BENT_PIPE_FILE(probes: Probes, 
+                   type: str, group_by: str|None = None,
+                   ext: str="csv") -> str:
+    """Return the file path for the probe bent pipe analysis."""
+    details = f"{type}{'_' + group_by if not group_by is None else ''}"
+    if len(probes) == 1:
+        return f"{PLOT_DIR}bent_pipe_{details}_{list(probes.keys())[0]}.{ext}"
+    return f"{PLOT_DIR}bent_pipe_{details}_{min(probes.keys())}_to_{max(probes.keys())}.{ext}"
