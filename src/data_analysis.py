@@ -4,7 +4,7 @@ from config import *
 from data_retrieving import *
 from data_transformation import *
 
-def probe_connection_analysis(probe_history: pd.DataFrame, start_time: int, end_time: int) -> pd.DataFrame:
+def probe_connection_analysis(probe_history: pd.DataFrame, start_time: int, end_time: int, save=False) -> pd.DataFrame:
     """
     Analyze probe connection over a specified time period.
     The connection is split into 3 categories: 
@@ -56,6 +56,11 @@ def probe_connection_analysis(probe_history: pd.DataFrame, start_time: int, end_
     df['starlink'] = df['starlink'].apply(lambda x: x / (end_time - start_time))
     df['other'] = df['other'].apply(lambda x: x / (end_time - start_time))
     df['disconnected'] = df['disconnected'].apply(lambda x: x / (end_time - start_time))
+    
+    if save:
+        name = f"{PLOT_DIR}probe_connection_analysis.csv"
+        df.to_csv(name, index=False)
+        print(f"Saved probe connection analysis to {name}")
     
     return df
 
@@ -133,7 +138,7 @@ if __name__ == "__main__":
     probes_history_df = transform_probes_history(PROBES, save=True)
     measurement_df = transform_measurement(MEASUREMENT_ID, save=True)
     
-    connection_analysis_df = probe_connection_analysis(probes_history_df, start_time, end_time)
+    connection_analysis_df = probe_connection_analysis(probes_history_df, start_time, end_time, save=True)
     print("Probe Connection Analysis:")
     print(connection_analysis_df)
     

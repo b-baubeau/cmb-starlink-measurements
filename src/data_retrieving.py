@@ -131,8 +131,8 @@ if __name__ == "__main__":
     measurement_info = get_measurement_info(MEASUREMENT_ID)
     print(f"Measurement Info: {measurement_info}")
     print("Download measurement results? (Y/n): ", end="")
-    if input().strip().lower() != 'y':
+    if input().strip().lower() == 'y':
         download_measurement(MEASUREMENT_ID)
     print("Download probes history? (Y/n): ", end="")
-    if input().strip().lower() != 'y':
+    if input().strip().lower() == 'y':
         download_probes_history(PROBES, measurement_info['start_time'], measurement_info['stop_time'])

@@ -1,5 +1,10 @@
 """Global configuration settings."""
 
+# --- Measurement constants ---
+MEASUREMENT_ID = 113897643
+STARLINK_ASN = 14593
+STARLINK_GATEWAY = "100.64.0.1"
+
 # --- Output settings ---
 FIG_SIZE = (6, 4)
 SHOW_PLOTS = False  # Show plots in the output
@@ -52,11 +57,6 @@ PROBES = {
     1007637: (SPAIN, EUROPE)
 }
 
-# --- Measurement constants ---
-MEASUREMENT_ID = 113897643
-STARLINK_ASN = 14593
-STARLINK_GATEWAY = "100.64.0.1"
-
 # --- File paths ---
 DATA_DIR = "data/"
 PLOT_DIR = "plots/"
@@ -70,10 +70,9 @@ def PROBES_HISTORY_FILE(probes: Probes, ext: str="json") -> str:
     return f"{DATA_DIR}probes_history_{min(probes.keys())}_to_{max(probes.keys())}.{ext}"
 def PROBE_CONNECTION_FILE(probes: Probes, ext: str="csv") -> str:
     """Return the file path for the probe connection analysis."""
-    DIR = DATA_DIR if ext=="cvs" else PLOT_DIR
     if len(probes) == 1:
-        return f"{DIR}probe_connection_{list(probes.keys())[0]}.{ext}"
-    return f"{DATA_DIR}probe_connection_{min(probes.keys())}_to_{max(probes.keys())}.{ext}"
+        return f"{PLOT_DIR}probe_connection_{list(probes.keys())[0]}.{ext}"
+    return f"{PLOT_DIR}probe_connection_{min(probes.keys())}_to_{max(probes.keys())}.{ext}"
 def PROBE_POP_IPS_FILE(probes: Probes, ext: str="csv") -> str:
     """Return the file path for the probe PoP IPs analysis."""
     if len(probes) == 1:
