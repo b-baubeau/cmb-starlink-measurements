@@ -19,6 +19,6 @@ The code is separated in 5 files:
 
 ## Running the data processing pipeline
 
-To run the full data processing pipeline, run ```python3 run.py```. If you want to only run part of the pipeline, you can run the corresponding file. It will run the previous data processing steps needed to carry its role.
+To run the full data processing pipeline, run ```PYTHONPATH=src python3 run.py```. If you want to only run part of the pipeline, you can run the corresponding file. It will run the previous data processing steps needed to carry its role.
 
 ```config.py``` contains parameters usefull to control the processing pipeline, such as wether to show plots during the process and wheter to save them or not.
