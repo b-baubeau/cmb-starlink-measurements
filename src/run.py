@@ -6,16 +6,18 @@ from data_analysis import *
 from data_visualization import *
 
 if __name__ == "__main__":    
+    measurement_info = get_measurement_info(MEASUREMENT_ID)
+    start_time, end_time = get_time_range(MEASUREMENT_ID)
+
     print("Dowloading measurement results...")
     download_measurement(MEASUREMENT_ID)
     print("Downloading probes history...")
-    download_probes_history(PROBES, measurement_info['start_time'], measurement_info['stop_time']) 
+    download_probes_history(PROBES, start_time, end_time) 
     print("Data saved into data directory...")   
     
     print("Transforming measurement data...")
     measurement_df = transform_measurement(MEASUREMENT_ID, save=True)
     probes_history_df = transform_probes_history(PROBES, save=True)
-    start_time, end_time = get_time_range(MEASUREMENT_ID)
     print("Saving transformed data to csv files...")
     
     print("Analyzing probe connection status...")
@@ -24,9 +26,6 @@ if __name__ == "__main__":
     
     print("Analyzing probe PoP IPs...")
     pop_ip_analysis_df = probe_pop_ip_analysis(probes_history_df, save=True)
-    print("\nProbe PoP IP Analysis:")
-    print(pop_ip_analysis_df)
-    print("\nSaving probe PoP IP analysis to 'probe_pop_ips.csv'")
     
     print("Analyzing segment latency proportions (user <-> Starlink <-> ground)...")
     segment_analysis_df = segment_analysis(measurement_df, save=True)

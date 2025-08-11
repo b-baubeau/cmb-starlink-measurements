@@ -58,7 +58,7 @@ def probe_connection_analysis(probe_history: pd.DataFrame, start_time: int, end_
     df['disconnected'] = df['disconnected'].apply(lambda x: x / (end_time - start_time))
     
     if save:
-        name = f"{PLOT_DIR}probe_connection_analysis.csv"
+        name = PROBE_CONNECTION_FILE(PROBES)
         df.to_csv(name, index=False)
         print(f"Saved probe connection analysis to {name}")
     
@@ -87,7 +87,7 @@ def probe_pop_ip_analysis(probe_history: pd.DataFrame, save=False) -> pd.DataFra
     
     if save:
         # Suppress "" for better readability (one ip per line) 
-        with open(f"{PLOT_DIR}probe_pop_ips.csv", 'w') as f:
+        with open(PROBE_POP_IPS_FILE(PROBES), 'w') as f:
             f.write(probe_pop_ips.to_csv(index=False).replace('"', ''))
         print("Probe PoP IP analysis saved to 'probe_pop_ips.csv'")
     

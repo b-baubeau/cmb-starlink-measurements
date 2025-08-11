@@ -1,0 +1,13 @@
+continent,country,user_latency,bent_pipe_latency,ground_latency,total_latency,user_proportion,bent_pipe_proportion,ground_proportion
+Africa,Benin,0.97,23.13,8.51,32.61,0.03,0.71,0.26
+Africa,Cameroon,2.59,48.05,-1.09,49.55,0.05,0.97,-0.02
+Europe,France,0.56,25.43,-0.55,25.44,0.02,1.0,-0.02
+Europe,Germany,0.63,28.64,-1.84,27.43,0.02,1.04,-0.07
+Europe,Hungary,0.99,24.39,-0.39,24.99,0.04,0.98,-0.02
+Europe,Spain,0.0,25.03,0.38,25.41,0.0,0.99,0.01
+Europe,UK,0.81,25.08,0.59,26.48,0.03,0.95,0.02
+North America,Canada,2.04,28.6,0.26,30.9,0.07,0.93,0.01
+North America,USA,0.91,28.89,-0.1,29.69,0.03,0.97,-0.0
+Oceania,Australia,0.26,23.05,0.39,23.7,0.01,0.97,0.02
+South America,Chile,0.0,32.92,4.44,37.37,0.0,0.88,0.12
+South America,Colombia,0.0,31.67,1.8,33.48,0.0,0.95,0.05

@@ -1,3 +1,7 @@
 data/*
 !data/sample*
+!data/probe_pop*
+!data/probe_connection*
+!data/segment_analysis*
+
 *cache*
