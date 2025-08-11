@@ -127,7 +127,6 @@ def download_probes_history(probes: Probes, start_time: int, end_time: int) -> N
     
 
 if __name__ == "__main__":
-    from config import MEASUREMENT_ID, PROBES
     measurement_info = get_measurement_info(MEASUREMENT_ID)
     print(f"Measurement Info: {measurement_info}")
     print("Download measurement results? (Y/n): ", end="")
