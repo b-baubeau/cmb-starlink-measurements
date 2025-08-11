@@ -80,6 +80,9 @@ def PROBE_POP_IPS_FILE(probes: Probes, ext: str="csv") -> str:
     if len(probes) == 1:
         return f"{dir}probe_pop_ips_{list(probes.keys())[0]}.{ext}"
     return f"{dir}probe_pop_ips_{min(probes.keys())}_to_{max(probes.keys())}.{ext}"
+def SEGMENT_FILE(probes: Probes, ext: str="csv") -> str:
+    """Return the file path for the segment analysis."""
+    return f"{DATA_DIR}segment_analysis_{min(probes.keys())}_to_{max(probes.keys())}.{ext}"
 def BENT_PIPE_FILE(probes: Probes, 
                    type: str, group_by: str|None = None,
                    ext: str="csv") -> str:

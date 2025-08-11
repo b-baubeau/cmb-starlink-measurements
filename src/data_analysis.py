@@ -93,6 +93,52 @@ def probe_pop_ip_analysis(probe_history: pd.DataFrame, save=False) -> pd.DataFra
     
     return probe_pop_ips
 
+def segment_analysis(measurement_df: pd.DataFrame, save=False) -> pd.DataFrame:
+    """
+    Analyze the proportions of user, bent pipe, and ground latencies in the measurement data.
+    
+    Parameters
+    ----------
+    measurement_df : pd.DataFrame
+        DataFrame containing measurement data.
+        
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame summarizing the segment analysis.
+    """
+    df = measurement_df.copy()
+    # Convert latencies to numeric and filter out non-numeric values
+    df['user_latency'] = pd.to_numeric(df['user_latency'], errors='coerce')
+    df['bent_pipe_latency'] = pd.to_numeric(df['bent_pipe_latency'], errors='coerce')
+    df['ground_latency'] = pd.to_numeric(df['ground_latency'], errors='coerce')
+    df = df.dropna(subset=['user_latency', 'bent_pipe_latency', 'ground_latency'])
+
+    segment_df = df.groupby(['continent', 'country']).agg({
+        'user_latency': 'mean',
+        'bent_pipe_latency': 'mean',
+        'ground_latency': 'mean'
+    }).reset_index()
+    segment_df['total_latency'] = segment_df['user_latency'] + segment_df['bent_pipe_latency'] + segment_df['ground_latency']
+    segment_df['user_proportion'] = segment_df['user_latency'] / segment_df['total_latency']
+    segment_df['bent_pipe_proportion'] = segment_df['bent_pipe_latency'] / segment_df['total_latency']
+    segment_df['ground_proportion'] = segment_df['ground_latency'] / segment_df['total_latency']
+    
+    segment_df['user_latency'] = segment_df['user_latency'].round(2)
+    segment_df['bent_pipe_latency'] = segment_df['bent_pipe_latency'].round(2)
+    segment_df['ground_latency'] = segment_df['ground_latency'].round(2)
+    segment_df['total_latency'] = segment_df['total_latency'].round(2)
+    segment_df['user_proportion'] = segment_df['user_proportion'].round(2)
+    segment_df['bent_pipe_proportion'] = segment_df['bent_pipe_proportion'].round(2)
+    segment_df['ground_proportion'] = segment_df['ground_proportion'].round(2)
+    
+    if save:
+        name = SEGMENT_FILE(PROBES)
+        segment_df.to_csv(name, index=False)
+        print(f"Saved segment analysis to {name}")
+    
+    return segment_df
+
 def bent_pipe_analysis(measurement_df: pd.DataFrame) -> pd.DataFrame:
     """
     Analyze the bent pipe data from the measurement.
@@ -113,15 +159,18 @@ def bent_pipe_analysis(measurement_df: pd.DataFrame) -> pd.DataFrame:
     
     # Filtering
     n = df.shape[0]
-    # errors='coerce' will convert non-numeric to NaN -> filter errors
+    # Convert latencies to numeric and filter out non-numeric values
+    df['user_latency'] = pd.to_numeric(df['user_latency'], errors='coerce')
     df['bent_pipe_latency'] = pd.to_numeric(df['bent_pipe_latency'], errors='coerce')
-    df = df[df['bent_pipe_latency'].notna()]
-    print(f"Filtered {n - df.shape[0]} rows with missing of invalid data.")
+    df['ground_latency'] = pd.to_numeric(df['ground_latency'], errors='coerce')
+    df = df.dropna(subset=['user_latency', 'bent_pipe_latency', 'ground_latency'])
     
     # Convert timestamp to datetime
     df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
     
     df.reset_index(drop=True, inplace=True)
+    
+    df = df[['continent', 'country', 'probe_id', 'timestamp', 'bent_pipe_latency']]
     
     return df.astype({
         'continent': str,
@@ -145,6 +194,10 @@ if __name__ == "__main__":
     pop_ip_analysis_df = probe_pop_ip_analysis(probes_history_df, save=True)
     print("\nProbe PoP IP Analysis:")
     print(pop_ip_analysis_df)
+    
+    segment_analysis_df = segment_analysis(measurement_df, save=True)
+    print("\nSegment Analysis:")
+    print(segment_analysis_df)
         
     bent_pipe_analysis_df = bent_pipe_analysis(measurement_df)
     print("\nBent Pipe Analysis:")

@@ -28,6 +28,9 @@ if __name__ == "__main__":
     print(pop_ip_analysis_df)
     print("\nSaving probe PoP IP analysis to 'probe_pop_ips.csv'")
     
+    print("Analyzing segment latency proportions (user <-> Starlink <-> ground)...")
+    segment_analysis_df = segment_analysis(measurement_df, save=True)
+    
     print("Analyzing bent pipe latency...")
     bent_pipe_analysis_df = bent_pipe_analysis(measurement_df)
     ml = 200  # max latency for cdf plots

@@ -121,7 +121,7 @@ def transform_measurement(measurement_id: int, save: bool=False) -> pd.DataFrame
     columns = ['probe_id', 'timestamp', 'bent_pipe_latency']
     fields = ['prb_id', 'timestamp', 'result']
     
-    def process_result(result: dict) -> list[float] | str:
+    def process_result(result: dict) -> list[float|str]:
         """
         Get the bent pipe latency from the result.
         
@@ -135,28 +135,41 @@ def transform_measurement(measurement_id: int, save: bool=False) -> pd.DataFrame
         float | str
             The mean bent pipe latency in milliseconds, or an error message if not available.
         """
-        rtts = []
+        user = 0
+        bent_pipe = 0
+        ground = 0
+        last_rtt = 0 # to get user latency (hop before starlink gateway)
         for hop in result:
             if 'error' in hop:
-                return f"Error: {hop['error']}"
+                return [f"Error: {hop['error']}"] * 3 
+            mean_rtt = 0
             for pkt in hop['result']:
-                if 'from' in pkt and 'rtt' in pkt and pkt['from'] == STARLINK_GATEWAY:
-                    rtts.append(pkt['rtt'])
-        if len(rtts) == 0:
-            return "Startlink gateway not in the path"
-        return rtts
+                if 'rtt' in pkt:
+                    mean_rtt += pkt['rtt']
+            mean_rtt /= len(hop['result'])
+            if 'from' in hop['result'][0] and hop['result'][0]['from'] == STARLINK_GATEWAY:
+                user = last_rtt
+                bent_pipe = mean_rtt - user
+            elif hop['hop'] == len(result):
+                ground = mean_rtt - user - bent_pipe
+            last_rtt = mean_rtt
+        
+        if bent_pipe == 0:
+            return [user, "Startlink gateway not in the path", ground]
+            
+        return [round(user, 2), round(bent_pipe, 2), round(ground, 2)]
 
     maps = {'result': process_result}
     
     df = json_data_extraction(file_path, columns, fields, maps=maps, save=False)
     
-    # Convert list of latencies to separate rows
-    df = df.explode('bent_pipe_latency').reset_index(drop=True)
+    # Convert list of latencies to separate columns
+    df[['user_latency', 'bent_pipe_latency', 'ground_latency']] = pd.DataFrame(df['bent_pipe_latency'].tolist(), index=df.index)
     
-    # Add country and continent information
+    # Add countryuser and continent information
     df['country'] = df['probe_id'].map(lambda x: PROBES[x][0])
     df['continent'] = df['probe_id'].map(lambda x: PROBES[x][1])
-    df = df[['continent', 'country', 'probe_id', 'timestamp', 'bent_pipe_latency']]
+    df = df[['continent', 'country', 'probe_id', 'timestamp', 'user_latency', 'bent_pipe_latency', 'ground_latency']]
     df.sort_values(by=['continent', 'country', 'probe_id', 'timestamp'], inplace=True)
     
     if save:
@@ -168,8 +181,10 @@ def transform_measurement(measurement_id: int, save: bool=False) -> pd.DataFrame
         'continent': str, 
         'country': str,
         'probe_id': int, 
-        'timestamp': int, 
-        'bent_pipe_latency': str # str because it can contain error messages
+        'timestamp': int,
+        'user_latency': str, # because it can be an error message
+        'bent_pipe_latency': str,
+        'ground_latency': str
         })
     
             
